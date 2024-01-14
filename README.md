@@ -58,3 +58,7 @@
 ### 4. Build
 
 - 추후 추가 예정
+
+### 협업 프로세스
+
+Github Issues & Projects로 진행 예정

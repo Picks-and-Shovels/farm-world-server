@@ -1,0 +1,11 @@
+services:
+    db:
+        container_name: farm-world-db
+        image: mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: farmworld
+        ports:
+            - 3306:3306
+        volumes:
+            - ./db:/var/lib/mysql

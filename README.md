@@ -12,9 +12,7 @@
 
 ### Library
 
-<img src="https://img.shields.io/badge/TypeORM-3766AB?style=for-the-badge&logo=TypeORM&logoColor=white">
-<img src="https://img.shields.io/badge/Passport-34E27A?style=for-the-badge&logo=Passport&logoColor=white">
-<img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black">
+<img src="https://img.shields.io/badge/TypeORM-3766AB?style=for-the-badge&logo=TypeORM&logoColor=white"> <img src="https://img.shields.io/badge/Passport-34E27A?style=for-the-badge&logo=Passport&logoColor=white"> <img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black">
 
 ### Code Formatter
 
@@ -31,6 +29,9 @@
 `npm install`
 
 ### 2. Start
+
+mysql이 없다면
+`docker-compose up -d`
 
 `npm run start:dev`
 

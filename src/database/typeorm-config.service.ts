@@ -50,4 +50,10 @@ export class TypeORMConfigService
   @IsBoolean()
   @IsNotEmpty()
   keepConnectionAlive: boolean;
+
+  @Expose({ name: 'DATABASE_SYNCHRONIZE' })
+  @Transform(({ value }) => OptionalBoolean(value) ?? true)
+  @IsBoolean()
+  @IsNotEmpty()
+  synchronize: boolean;
 }

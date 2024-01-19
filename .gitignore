@@ -36,3 +36,8 @@ lerna-debug.log*
 
 # Docker volume
 /db
+
+# env
+.env
+.env.test
+.env.production

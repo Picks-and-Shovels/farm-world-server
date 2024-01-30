@@ -34,4 +34,8 @@ export class BoardsController {
   deletePost(@Param('post_id') postId : number ){
     return this.boardsService.deletePost(postId)
   }
+  @Patch(':post_id/like')
+  increasePostLikes(@Param('post_id') postId : number){
+    return this.boardsService.increaseLikes(postId);
+  }
 }

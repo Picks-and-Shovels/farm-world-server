@@ -38,6 +38,13 @@ export class BoardsService {
 
   async getPostById(postId : number ) : Promise<Board> {
     const post = await this.boardsRepository.findOne({where:{ id : postId}});
+    
+    if(post){
+      post.views +=1;
+
+      await this.boardsRepository.save(post);
+    }
+
     return post;
   }
 
@@ -60,5 +67,14 @@ export class BoardsService {
       await this.boardsRepository.remove(post);
     }
     
+  }
+  
+  // 이 코드는 중복해서 좋아요를 누를 수 있다는 단점이 있음.
+  async increaseLikes(postId : number){
+    const post = await this.boardsRepository.findOne({where : { id : postId}});
+
+    post.likes +=1;
+
+    return this.boardsRepository.save(post);
   }
 }

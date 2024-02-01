@@ -1,11 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFarmDto } from './dto/create-farm.dto';
 import { UpdateFarmDto } from './dto/update-farm.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Farm } from './entities/farm.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class FarmService {
-  create(createFarmDto: CreateFarmDto) {
-    return 'This action adds a new farm';
+  constructor(
+    @InjectRepository(Farm)
+    private readonly farmRepository : Repository<Farm>
+  ) {}
+  async create(createFarmDto: CreateFarmDto) {
+    const farmEntity = this.farmRepository.create(createFarmDto);
+    return await this.farmRepository.save(farmEntity);
   }
 
   findAll() {

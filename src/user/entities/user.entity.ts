@@ -9,8 +9,20 @@ export class User extends BaseEntity {
   @Generated('uuid')
   uuid: string;
 
-  @Column({ unique: true })
+  @Column({ default : 'default' })
   nickname: string;
+
+  @Column({ unique : true , length : 30})
+  username : string;
+
+  @Column()
+  password : string;
+
+  @Column({ length : 20})
+  name : string;
+
+  @Column()
+  age : number;
 
   @OneToOne(() => Farm, (farm) => farm.user)
   @JoinColumn()

@@ -6,10 +6,19 @@ import { UserModule } from './user/user.module';
 import { FarmModule } from './farm/farm.module';
 import { BoardsModule } from './boards/boards.module';
 import { CommentsModule } from './comments/comments.module';
+import { AuthModule } from './auth/auth.module';
 import { TagModule } from './tag/tag.module';
 
 @Module({
-  imports: [DatabaseModule, UserModule, FarmModule, BoardsModule, CommentsModule, TagModule],
+  imports: [
+    DatabaseModule,
+    UserModule,
+    FarmModule,
+    BoardsModule,
+    CommentsModule,
+    AuthModule,
+    TagModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

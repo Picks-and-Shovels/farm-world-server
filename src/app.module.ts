@@ -9,7 +9,6 @@ import { CommentsModule } from './comments/comments.module';
 import { TagModule } from './tag/tag.module';
 import { ImageModule } from './image/image.module';
 import { StorageModule } from './storage/storage.module';
-import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -21,7 +20,6 @@ import { TagModule } from './tag/tag.module';
     TagModule,
     ImageModule,
     StorageModule,
-    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService],

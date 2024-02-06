@@ -8,16 +8,18 @@ import { BoardsModule } from './boards/boards.module';
 import { CommentsModule } from './comments/comments.module';
 import { TagModule } from './tag/tag.module';
 import { MediaModule } from './media/media.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     DatabaseModule,
     UserModule,
     FarmModule,
     BoardsModule,
     CommentsModule,
     TagModule,
-    // MediaModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

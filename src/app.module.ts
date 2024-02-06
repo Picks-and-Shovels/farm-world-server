@@ -6,10 +6,21 @@ import { UserModule } from './user/user.module';
 import { FarmModule } from './farm/farm.module';
 import { BoardsModule } from './boards/boards.module';
 import { CommentsModule } from './comments/comments.module';
-import { AuthModule } from './auth/auth.module';
+import { TagModule } from './tag/tag.module';
+import { ImageModule } from './image/image.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
-  imports: [DatabaseModule, UserModule, FarmModule, BoardsModule, CommentsModule, AuthModule],
+  imports: [
+    DatabaseModule,
+    UserModule,
+    FarmModule,
+    BoardsModule,
+    CommentsModule,
+    TagModule,
+    ImageModule,
+    StorageModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -7,9 +7,20 @@ import { FarmModule } from './farm/farm.module';
 import { BoardsModule } from './boards/boards.module';
 import { CommentsModule } from './comments/comments.module';
 import { TagModule } from './tag/tag.module';
+import { MediaModule } from './media/media.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [DatabaseModule, UserModule, FarmModule, BoardsModule, CommentsModule, TagModule],
+  imports: [
+    ConfigModule.forRoot(),
+    DatabaseModule,
+    UserModule,
+    FarmModule,
+    BoardsModule,
+    CommentsModule,
+    TagModule,
+    MediaModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

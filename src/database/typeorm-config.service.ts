@@ -1,8 +1,10 @@
 import { AbstractConfigService, OptionalBoolean } from '@nestjs-library/config';
+import { Injectable } from '@nestjs/common';
 import { Expose, Transform, Type } from 'class-transformer';
 import { IsBoolean, IsNotEmpty, IsPositive, IsString } from 'class-validator';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 
+@Injectable()
 export class TypeORMConfigService
   extends AbstractConfigService<TypeORMConfigService>
   implements MysqlConnectionOptions

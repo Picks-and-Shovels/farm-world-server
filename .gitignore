@@ -36,3 +36,9 @@ lerna-debug.log*
 
 # Docker volume
 /db
+
+# environment
+.env
+.env.prod
+.env.local
+farm-world-*.json

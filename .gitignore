@@ -41,3 +41,4 @@ lerna-debug.log*
 .env
 .env.prod
 .env.local
+farm-world-*.json

@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { StorageConfigService } from './storage-config.service';
 import { Bucket, Storage } from '@google-cloud/storage';
 import { ConfigMetadata } from '@google-cloud/storage/build/cjs/src/resumable-upload';
-import _path from 'path';
+import { join } from 'path';
 import { v4 as uuid } from 'uuid';
 
 @Injectable()
@@ -11,16 +11,10 @@ export class StorageService {
   private bucket: Bucket;
 
   constructor(private readonly storageConfigService: StorageConfigService) {
-    console.log(storageConfigService);
-    const { projectId, clientEmail, privateKey, mediaBucket } =
-      storageConfigService;
+    const { keyFilePath, mediaBucket } = storageConfigService;
 
     this.storage = new Storage({
-      projectId,
-      credentials: {
-        client_email: clientEmail,
-        private_key: privateKey,
-      },
+      keyFilename: keyFilePath,
     });
 
     this.bucket = this.storage.bucket(mediaBucket);
@@ -38,9 +32,9 @@ export class StorageService {
     destination: string,
     file: Express.Multer.File,
     metadata: ConfigMetadata = {},
-  ) {
+  ): Promise<string> {
     const filename = this.getFilename(file);
-    const path = _path.join(destination, filename);
+    const path = join(destination, filename);
 
     const _file = this.bucket.file(path);
 
@@ -50,7 +44,10 @@ export class StorageService {
     return new Promise((res, rej) => {
       _file
         .createWriteStream({ metadata })
-        .on('error', (err) => rej(err))
+        .on('error', (err) => {
+          console.error(err);
+          rej(new BadRequestException());
+        })
         .on('finish', () =>
           res(
             `https://storage.googleapis.com/${_file.metadata.bucket}/${path}`,

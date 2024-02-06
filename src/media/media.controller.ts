@@ -1,7 +1,7 @@
 import {
   Controller,
   Post,
-  UploadedFiles,
+  UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -12,10 +12,10 @@ export class MediaController {
   constructor(private storageService: StorageService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('files'))
-  async uploadMedia(@UploadedFiles() files: Array<Express.Multer.File>) {
-    await Promise.all(
-      files.map((file) => this.storageService.save('media', file)),
-    );
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadMedia(@UploadedFile() file: Express.Multer.File) {
+    const url = await this.storageService.save('media', file);
+
+    return { url };
   }
 }

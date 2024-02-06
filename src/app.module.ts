@@ -6,7 +6,9 @@ import { UserModule } from './user/user.module';
 import { FarmModule } from './farm/farm.module';
 import { BoardsModule } from './boards/boards.module';
 import { CommentsModule } from './comments/comments.module';
-import { AuthModule } from './auth/auth.module';
+import { TagModule } from './tag/tag.module';
+import { ImageModule } from './image/image.module';
+import { StorageModule } from './storage/storage.module';
 import { TagModule } from './tag/tag.module';
 
 @Module({
@@ -16,7 +18,9 @@ import { TagModule } from './tag/tag.module';
     FarmModule,
     BoardsModule,
     CommentsModule,
-    AuthModule,
+    TagModule,
+    ImageModule,
+    StorageModule,
     TagModule,
   ],
   controllers: [AppController],

@@ -6,5 +6,6 @@ import { ConfigModule } from '@nestjs-library/config';
 @Module({
   imports: [ConfigModule.forFeature(StorageConfigService)],
   providers: [StorageService],
+  exports: [StorageService],
 })
 export class StorageModule {}

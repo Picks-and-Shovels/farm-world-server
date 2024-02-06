@@ -1,7 +1,9 @@
 import { AbstractConfigService } from '@nestjs-library/config';
+import { Injectable } from '@nestjs/common';
 import { Expose } from 'class-transformer';
 import { IsNotEmpty, IsString } from 'class-validator';
 
+@Injectable()
 export class StorageConfigService extends AbstractConfigService<StorageConfigService> {
   @Expose({ name: 'GCP_PROJECT_ID' })
   @IsString()

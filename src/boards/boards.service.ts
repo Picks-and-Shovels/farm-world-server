@@ -4,12 +4,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IntegerType, Repository } from 'typeorm';
 import { Board } from './entities/boards.entity';
 import { UpdateBoardsDto } from './dto/update-boards.dto';
+import { boardReadLike } from './entities/boardReadLike.entity';
 
 @Injectable()
 export class BoardsService {
   constructor(
     @InjectRepository(Board)  
     private readonly boardsRepository: Repository<Board>,
+    @InjectRepository(boardReadLike)
+    private readonly boardReadLikeRepository : Repository<boardReadLike>,
   ) {}
 
   // 게시글 만들기
@@ -40,7 +43,7 @@ export class BoardsService {
     const post = await this.boardsRepository.findOne({where:{ id : postId}});
     
     if(post){
-      post.views +=1;
+      post.totalViews +=1;
 
       await this.boardsRepository.save(post);
     }
@@ -70,11 +73,22 @@ export class BoardsService {
   }
   
   // 이 코드는 중복해서 좋아요를 누를 수 있다는 단점이 있음.
-  async increaseLikes(postId : number){
+  async increaseLikes(postId : number,user : any){
     const post = await this.boardsRepository.findOne({where : { id : postId}});
 
-    post.likes +=1;
+    if (!post.likes) {
+      post.likes = []; // likes가 undefined인 경우 빈 배열로 초기화
+    }
 
-    return this.boardsRepository.save(post);
+    const newLike = new boardReadLike();
+    newLike.board = post;
+    newLike.user = user;
+    newLike.liked = true;
+    newLike.viewed = true;
+
+    post.totalLikes += 1;
+    post.likes.push(newLike);
+    await this.boardReadLikeRepository.save(newLike);
+    await this.boardsRepository.save(post);
   }
 }

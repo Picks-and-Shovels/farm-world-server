@@ -18,22 +18,21 @@ export class CommentsService {
   async getComment(postId : number) : Promise<Comment[]>
   {
      return this.commentsRepository.find({
-      where : {id : postId},
-      order: {
-        createdAt : 'ASC'
-      }
-     })
+      where : {board : {id : postId}},
+      order : { createdAt : 'ASC'}
+    });
   }
 
-  async postComment(postId : number ,createCommentDto : CreateCommentDto ){
+  async postComment(postId : number ,createCommentDto : CreateCommentDto ){ 
     const board = await this.boardsRepository.findOne({where : { id : postId}});
+
     const newComment = this.commentsRepository.create({
       board : board,
       content : createCommentDto.content,
       user : board.writer
     });
 
-    return await this.boardsRepository.save(newComment);
+    return await this.commentsRepository.save(newComment);
   }
 
   async updateComment(postId : number, commentId : number,UpdateCommentDto : UpdateCommentDto){

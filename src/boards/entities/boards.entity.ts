@@ -3,11 +3,10 @@ import { Column, Entity, OneToOne, JoinColumn, ManyToMany, JoinTable, OneToMany}
 import { BaseEntity } from "src/base.entity";
 import { Tag } from "src/tag/entities/tag.entity";
 import { Comment } from "src/comments/entities/comments.entity";
+import { boardReadLike } from "./boardReadLike.entity";
 
 @Entity()
 export class Board extends BaseEntity{
-  
-
   @Column()
   title : string;
 
@@ -20,15 +19,15 @@ export class Board extends BaseEntity{
 
   @Column({
     type : 'int',
-    default : 0
+    default : 0,
   })
-  views : number;
+  totalViews : number;
 
   @Column({
     type : 'int',
-    default : 0
+    default : 0,
   })
-  likes : number;
+  totalLikes : number;
 
   @ManyToMany(() => Tag)
   @JoinTable()
@@ -36,4 +35,11 @@ export class Board extends BaseEntity{
 
   @OneToMany(type=> Comment,comment => comment.board)
   comments : Comment[];
-}
+
+  @OneToMany(()=> boardReadLike ,boardReadLike=>boardReadLike.board)
+  reads : boardReadLike[];
+
+  @OneToMany(()=> boardReadLike ,boardReadLike=>boardReadLike.board)
+  likes : boardReadLike[];
+}   
+

@@ -12,14 +12,7 @@ export class APIDocumentation {
       .setTitle(process.env.npm_package_name)
       .setVersion(process.env.npm_package_version)
       .setDescription('NEST APIS')
-      .addBearerAuth({
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        name: 'Authorization',
-        description: 'Enter JWT token',
-        in: 'header',
-      })
+      .addCookieAuth('connect.sid')
       .build();
   }
 

@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Request,
+  Session,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,7 +17,8 @@ import { JoinUserDto } from './dto/join-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoginRequestDto } from 'src/auth/entities/login-user.entity';
-
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
+import * as session from 'express-session'
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -54,11 +56,11 @@ export class UserController {
   }
 
   @ApiTags('로그인 API')
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('auth/login')
-  @ApiOperation({summary : '사용자 로그인 API', description : '사용자가 로그인한다.'})
   @ApiBody({type :LoginRequestDto , description : '로그인 요청 정보'})
-  async login(@Request() req){
-    return req.user;
+  async logIn(@Request() req){
+    req.session.user = req.user;
+    return { user : req.user , sessionId : req.session.id, other : req.session.user.username};
   }
 }

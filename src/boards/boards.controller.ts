@@ -2,7 +2,7 @@ import { Body, Controller, Post, Query,Get, Param , Patch , Delete, Request} fro
 import { BoardsService } from './boards.service';
 import { CreateBoardsDto } from './dto/create-boards.dto';
 import { UpdateBoardsDto } from './dto/update-boards.dto';
-import { ApiOperation, ApiTags,ApiQuery, ApiParam } from '@nestjs/swagger';
+import { ApiOperation, ApiTags,ApiQuery, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('게시판 API')
 @Controller('boards/posts')
@@ -30,9 +30,11 @@ export class BoardsController {
 
   @ApiOperation({summary : "게시글 상세 조회 API",description : "게시글을 상세 조회한다."})
   @ApiParam({ name : 'post_id',description : '게시물 ID', example: 52, required:true})
+  @ApiBearerAuth()
   @Get(':post_id')
-  getPostById(@Param('post_id') postId : number){
-    return this.boardsService.getPostById(postId);
+  getPostById(@Param('post_id') postId : number, @Request() req){
+    const user = req.session.user;
+    return this.boardsService.getPostById(postId,user);
   }
 
   @ApiOperation({summary : "게시물 수정 API", description : "게시물을 수정한다."})
@@ -53,7 +55,7 @@ export class BoardsController {
   @ApiParam({name : 'post_id', description : '게시물 ID',example : 52 ,  required : true})
   @Patch(':post_id/like')
   increasePostLikes(@Param('post_id') postId : number, @Request() req){
-    const user = req.user;
+    const user = req.session.user;
     return this.boardsService.increaseLikes(postId,user);
   }
 }

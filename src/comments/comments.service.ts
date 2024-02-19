@@ -17,7 +17,7 @@ export class CommentsService {
 
   async getComment(postId : number) : Promise<Comment[]>
   {
-     return this.commentsRepository.find({
+     return await this.commentsRepository.find({
       where : {board : {id : postId}},
       order : { createdAt : 'ASC'}
     });

@@ -34,7 +34,7 @@ export class JoinUserDto{
 
 
   @ApiProperty({
-    example : "farmworld123!@#",
+    example : "gusals619",
     description : '비밀번호',
     required : true,
   })

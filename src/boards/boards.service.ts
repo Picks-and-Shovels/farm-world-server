@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateBoardsDto } from './dto/create-boards.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IntegerType, Repository } from 'typeorm';
 import { Board } from './entities/boards.entity';
 import { UpdateBoardsDto } from './dto/update-boards.dto';
 import { boardReadLike } from './entities/boardReadLike.entity';
+import { NewLineKind } from 'typescript';
 
 @Injectable()
 export class BoardsService {
@@ -39,15 +40,34 @@ export class BoardsService {
     return filteredPosts;
   }
 
-  async getPostById(postId : number ) : Promise<Board> {
+  async getPostById(postId : number ,user : any) : Promise<Board> {
     const post = await this.boardsRepository.findOne({where:{ id : postId}});
     
-    if(post){
-      post.totalViews +=1;
-
-      await this.boardsRepository.save(post);
+    if(user == null){
+      throw new UnauthorizedException();
     }
 
+    if(!post.reads){
+      post.reads = [];
+    }
+
+    post.totalViews +=1;
+    
+    const existingRead = await this.boardReadLikeRepository.findOne({
+      where:{
+        board : {id:postId},
+        user: {id : user.id},
+      },
+    })
+    
+    if(!existingRead){
+      const newRead = new boardReadLike();
+      newRead.board = post;
+      newRead.user = user;
+      newRead.liked = false;
+      newRead.viewed = true;
+      await this.boardReadLikeRepository.save(newRead);
+    }
     return post;
   }
 
@@ -74,21 +94,38 @@ export class BoardsService {
   
   // 이 코드는 중복해서 좋아요를 누를 수 있다는 단점이 있음.
   async increaseLikes(postId : number,user : any){
-    const post = await this.boardsRepository.findOne({where : { id : postId}});
+    const post = await this.boardsRepository.findOne({
+      where : { id : postId},
+      relations:['likes']
+    });
 
-    if (!post.likes) {
-      post.likes = []; // likes가 undefined인 경우 빈 배열로 초기화
+    if(!post){
+      throw new Error('Not found');
     }
+    let likeEntry = await this.boardReadLikeRepository.findOne({
+      where: {
+        user :{id : user.id},
+        board : {id: postId},
+        viewed : true,
+      }
+    });
 
-    const newLike = new boardReadLike();
-    newLike.board = post;
-    newLike.user = user;
-    newLike.liked = true;
-    newLike.viewed = true;
-
-    post.totalLikes += 1;
-    post.likes.push(newLike);
-    await this.boardReadLikeRepository.save(newLike);
+    if(likeEntry){
+      if(!likeEntry.liked){
+        likeEntry.liked = true;
+        post.totalLikes += 1; // Increment only if the like status changes
+      }
+    }
+    else{
+      likeEntry= new boardReadLike();
+      likeEntry.board = post;
+      likeEntry.user = user;
+      likeEntry.liked = true;
+      likeEntry.viewed = true;
+      post.totalLikes += 1;
+    }
+    await this.boardReadLikeRepository.save(likeEntry);
     await this.boardsRepository.save(post);
+
   }
 }

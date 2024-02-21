@@ -33,10 +33,10 @@ export class BoardsService {
   // 게시글의 title만 return
   async getPosts(filterOptions : { tag?: string;  title? : string;  writer?:string}): Promise<any[]>{
     let query = this.boardsRepository.createQueryBuilder("post")
-    .select("post.title") // 게시글의 제목 선택
-    .addSelect("post.totalViews") // 조회수 컬럼 추가
-    .addSelect("post.totalLikes") // 좋아요 수 컬럼 추가
-    .addSelect("post.id")
+    .select("post.title","title") // 게시글의 제목 선택
+    .addSelect("post.totalViews","totalViews") // 조회수 컬럼 추가
+    .addSelect("post.totalLikes","totalLikes") // 좋아요 수 컬럼 추가
+    .addSelect("post.writerId","writerId")
 
     if (filterOptions.tag) {
       query = query.andWhere("post.tag = :tag", { tag: filterOptions.tag });

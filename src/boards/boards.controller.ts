@@ -11,8 +11,9 @@ export class BoardsController {
   
   @ApiOperation({summary : "게시글 작성 API",description : "게시글을 생성한다"})
   @Post()
-  createPost(@Body() createBoardsDto: CreateBoardsDto){
-    return this.boardsService.create(createBoardsDto);
+  createPost(@Body() createBoardsDto: CreateBoardsDto,@Request() req){
+    const user = req.session.user;
+    return this.boardsService.create(createBoardsDto,user);
   }
 
   @ApiOperation({summary : "게시글 조회 API",description : "(Option에 따라) 게시물을 조회한다."})

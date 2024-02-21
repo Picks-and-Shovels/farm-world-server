@@ -18,7 +18,7 @@ export class TypeORMConfigService
   database: string;
 
   @Expose({ name: 'DATABASE_HOST' })
-  @Transform(({ value }) => value ?? 'localhost')
+  @Transform(({ value }) => value ?? '172.22.240.3')
   @IsString()
   @IsNotEmpty()
   host: string;
@@ -36,7 +36,7 @@ export class TypeORMConfigService
   username: string;
 
   @Expose({ name: 'DATABASE_PASSWORD' })
-  @Transform(({ value }) => value ?? 'root')
+  @Transform(({ value }) => value ?? 'farmworld123!@#')
   @IsString()
   @IsNotEmpty()
   password: string;

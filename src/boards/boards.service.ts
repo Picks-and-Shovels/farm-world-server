@@ -6,7 +6,7 @@ import { Board } from './entities/boards.entity';
 import { UpdateBoardsDto } from './dto/update-boards.dto';
 import { boardReadLike } from './entities/boardReadLike.entity';
 import { NewLineKind } from 'typescript';
-
+import { User } from 'src/user/entities/user.entity';
 @Injectable()
 export class BoardsService {
   constructor(
@@ -14,17 +14,29 @@ export class BoardsService {
     private readonly boardsRepository: Repository<Board>,
     @InjectRepository(boardReadLike)
     private readonly boardReadLikeRepository : Repository<boardReadLike>,
+    @InjectRepository(User)
+    private readonly userRepository : Repository<User>,
   ) {}
 
   // 게시글 만들기
-  async create(createBoardsDto : CreateBoardsDto){
-    const boardEntity = this.boardsRepository.create(createBoardsDto);
+  async create(createBoardsDto : CreateBoardsDto, user : any){
+
+    const boardEntity = this.boardsRepository.create({
+      ...createBoardsDto,
+      writer : user,
+  });
+
     return await this.boardsRepository.save(boardEntity);
   }
 
+
   // 게시글의 title만 return
   async getPosts(filterOptions : { tag?: string;  title? : string;  writer?:string}): Promise<any[]>{
-    let query = this.boardsRepository.createQueryBuilder("post").select("post.title");
+    let query = this.boardsRepository.createQueryBuilder("post")
+    .select("post.title") // 게시글의 제목 선택
+    .addSelect("post.totalViews") // 조회수 컬럼 추가
+    .addSelect("post.totalLikes") // 좋아요 수 컬럼 추가
+    .addSelect("post.id")
 
     if (filterOptions.tag) {
       query = query.andWhere("post.tag = :tag", { tag: filterOptions.tag });
@@ -36,7 +48,7 @@ export class BoardsService {
       query = query.andWhere("post.writer = :writer", { writer: filterOptions.writer });
     }
  
-    const filteredPosts = await query.getMany();
+    const filteredPosts = await query.getRawMany();
     return filteredPosts;
   }
 
@@ -89,10 +101,8 @@ export class BoardsService {
     if(post){
       await this.boardsRepository.remove(post);
     }
-    
   }
   
-  // 이 코드는 중복해서 좋아요를 누를 수 있다는 단점이 있음.
   async increaseLikes(postId : number,user : any){
     const post = await this.boardsRepository.findOne({
       where : { id : postId},
@@ -113,7 +123,7 @@ export class BoardsService {
     if(likeEntry){
       if(!likeEntry.liked){
         likeEntry.liked = true;
-        post.totalLikes += 1; // Increment only if the like status changes
+        post.totalLikes += 1; 
       }
     }
     else{

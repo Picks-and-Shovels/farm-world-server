@@ -14,7 +14,7 @@ export class Board extends BaseEntity{
   content : string;
 
   @OneToOne(() => User,(user)=> user.farm)
-  @JoinColumn()
+  @JoinColumn({name : 'writerId'})
   writer : User;
 
   @Column({
